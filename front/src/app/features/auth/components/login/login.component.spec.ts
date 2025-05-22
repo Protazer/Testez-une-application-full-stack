@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 
@@ -22,14 +21,12 @@ describe('LoginComponent', () => {
   let authService: AuthService;
   let sessionService: SessionService;
   let router: Router;
-  let formBuilder: FormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
       providers: [SessionService, AuthService],
       imports: [
-        RouterTestingModule,
         BrowserAnimationsModule,
         HttpClientModule,
         MatCardModule,
@@ -44,29 +41,14 @@ describe('LoginComponent', () => {
     authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
     sessionService = TestBed.inject(SessionService);
-    formBuilder = TestBed.inject(FormBuilder);
-    component.form = formBuilder.group(({email: [
-        '',
-        [
-          Validators.required,
-          Validators.email
-        ]
-      ],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.min(3)
-        ]
-      ]}))
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create component instance with form and fields', () => {
     expect(component).toBeTruthy();
   });
   it('should submit the form with no error', () => {
-    fixture.ngZone?.run(() => {
+    fixture.ngZone?.run(async () => {
       const navigateSpy = jest.spyOn(router, 'navigate');
       const authSpy = jest.spyOn(authService, 'login').mockReturnValue(of({token: 'jwt',
         type: 'session',
@@ -76,8 +58,20 @@ describe('LoginComponent', () => {
         lastName: 'User',
         admin: false,}));
       const sessionServiceSpy = jest.spyOn(sessionService, 'logIn');
-      component.form.setValue({email: 'yoga@studio.com', password: 'test!1234'});
+
+      const emailInput = fixture.nativeElement.querySelector('input[formControlName="email"]');
+      const passwordInput = fixture.nativeElement.querySelector('input[formControlName="password"]');
+      emailInput.value = 'yoga@studio.com'
+      emailInput.dispatchEvent(new Event('input'));
+      passwordInput.value = 'test!1234';
+      passwordInput.dispatchEvent(new Event('input'));
+      await fixture.whenStable();
+      fixture.detectChanges()
       component.submit();
+
+
+      expect(component.form.value).toStrictEqual({email: 'yoga@studio.com', password: 'test!1234'});
+      expect(component.form.valid).toBeTruthy();
       expect(authSpy).toHaveBeenCalledWith({email: 'yoga@studio.com', password: 'test!1234'});
       expect(sessionServiceSpy).toHaveBeenCalled();
       expect(sessionService.sessionInformation).toStrictEqual({
@@ -95,7 +89,12 @@ describe('LoginComponent', () => {
   })
   it('should submit the form with error', () => {
     const authSpy = jest.spyOn(authService, 'login').mockReturnValueOnce(throwError(() => {}));
+    const sessionServiceSpy = jest.spyOn(sessionService, 'logIn');
     component.submit();
+    expect(component.form.value).toStrictEqual({email: '', password: ''});
+    expect(component.form.valid).toBeFalsy();
+    expect(sessionServiceSpy).not.toHaveBeenCalled();
+    expect(authSpy).toHaveBeenCalled();
     expect(component.onError).toBeTruthy();
   })
 });
