@@ -12,11 +12,11 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {expect} from '@jest/globals';
 import {SessionService} from 'src/app/services/session.service';
 import {SessionApiService} from '../../services/session-api.service';
-
 import {FormComponent} from './form.component';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {of} from "rxjs";
 import {Session} from "../../interfaces/session.interface";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 describe('FormComponent', () => {
 
@@ -24,6 +24,8 @@ describe('FormComponent', () => {
   let fixture: ComponentFixture<FormComponent>;
   let router: Router;
   let sessionApiService: SessionApiService;
+  let matSnackBar: MatSnackBar;
+  let httpMock: HttpTestingController;
 
   const mockSessionService = {
     sessionInformation: {
@@ -41,6 +43,7 @@ describe('FormComponent', () => {
           {path: 'sessions', component: FormComponent},
           {path: 'update', component: FormComponent}
         ]),
+        HttpClientTestingModule,
         HttpClientModule,
         MatCardModule,
         MatIconModule,
@@ -54,14 +57,17 @@ describe('FormComponent', () => {
       providers: [
         {provide: SessionService, useValue: mockSessionService},
         {provide: MatSnackBar, useValue: mockedMatSnackBar},
+        {provide: ActivatedRoute, useValue: {snapshot: {paramMap: {get: () => 1,},},}},
       ],
       declarations: [FormComponent]
     })
       .compileComponents();
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
+    matSnackBar = TestBed.inject(MatSnackBar);
     sessionApiService = TestBed.inject(SessionApiService);
     router = TestBed.inject(Router);
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 
@@ -100,6 +106,10 @@ describe('FormComponent', () => {
         await router.navigate(['/update']);
         mockSessionService.sessionInformation.admin = true;
         component.ngOnInit();
+
+        const detailsRequest = httpMock.expectOne({url: "api/session/1", method: "GET"});
+        detailsRequest.flush(of(mockedSession))
+
         expect(component.onUpdate).toBeTruthy();
         expect(sessionApiServiceSpy).toHaveBeenCalled();
         expect(component["initForm"]).toHaveBeenCalledWith(mockedSession)
@@ -118,10 +128,9 @@ describe('FormComponent', () => {
     };
     it('should create a session', () => {
       fixture.ngZone?.run(async () => {
-
         const sessionApiServiceSpy = jest.spyOn(sessionApiService, "create").mockReturnValue(of(mockedSession));
         const navigateSpy = jest.spyOn(router, 'navigate');
-        const matSnackBarSpy = jest.spyOn(mockedMatSnackBar, 'open');
+        const matSnackBarSpy = jest.spyOn(matSnackBar, 'open');
         component.sessionForm?.setValue({
           name: mockedSession.name,
           description: mockedSession.description,
@@ -138,17 +147,22 @@ describe('FormComponent', () => {
     })
     it('should update a session', () => {
       fixture.ngZone?.run(async () => {
-        const sessionApiServiceSpy = jest.spyOn(sessionApiService, "update").mockReturnValue(of(mockedSession));
+        const sessionApiServiceSpy = jest.spyOn(sessionApiService, "update");
         const navigateSpy = jest.spyOn(router, 'navigate');
-        const matSnackBarSpy = jest.spyOn(mockedMatSnackBar, 'open');
+        const matSnackBarSpy = jest.spyOn(matSnackBar, 'open');
         component.sessionForm?.setValue({
           name: mockedSession.name,
           description: mockedSession.description,
           date: mockedSession.date,
           teacher_id: mockedSession.teacher_id
         });
-        component.onUpdate = true;
+        await router.navigate(['/update']);
+        component.ngOnInit();
         component.submit();
+
+        const updateRequest = httpMock.expectOne({url: "api/session/1", method: "PUT"});
+        updateRequest.flush(of(mockedSession));
+
         expect(component.sessionForm).toBeDefined();
         expect(sessionApiServiceSpy).toHaveBeenCalledWith(mockedSession);
         expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
@@ -158,10 +172,9 @@ describe('FormComponent', () => {
   })
   describe("should not submit the form", () => {
     it('should not submit request with invalid form', () => {
-
       const sessionApiServiceSpy = jest.spyOn(sessionApiService, "create");
       const navigateSpy = jest.spyOn(router, 'navigate');
-      const matSnackBarSpy = jest.spyOn(mockedMatSnackBar, 'open');
+      const matSnackBarSpy = jest.spyOn(matSnackBar, 'open');
       component.sessionForm = undefined;
       component.submit();
       expect(sessionApiServiceSpy).not.toHaveBeenCalledWith();

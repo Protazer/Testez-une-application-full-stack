@@ -1,29 +1,31 @@
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import { ReactiveFormsModule} from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { expect } from '@jest/globals';
-
-import { RegisterComponent } from './register.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {expect} from '@jest/globals';
+import {RegisterComponent} from './register.component';
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
-import {of, throwError} from "rxjs";
+import {throwError} from "rxjs";
+import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let authService: AuthService;
   let router: Router;
+  let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [RegisterComponent],
       imports: [
+        HttpClientTestingModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         HttpClientModule,
@@ -32,7 +34,8 @@ describe('RegisterComponent', () => {
         MatFormFieldModule,
         MatIconModule,
         MatInputModule
-      ]
+      ],
+      providers: [AuthService]
     })
       .compileComponents();
 
@@ -40,17 +43,19 @@ describe('RegisterComponent', () => {
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
+
 
   it('should create component instance with form and fields', () => {
     expect(component).toBeTruthy();
   });
 
   it("should register without error", () => {
-    fixture.ngZone?.run( () => {
+    fixture.ngZone?.run(() => {
       const navigateSpy = jest.spyOn(router, 'navigate');
-      const authSpy = jest.spyOn(authService, 'register').mockReturnValue(of(undefined));
+      const authSpy = jest.spyOn(authService, 'register');
 
       const emailInput = fixture.nativeElement.querySelector('input[formControlName="email"]');
       emailInput.value = 'test@test.com'
@@ -69,6 +74,9 @@ describe('RegisterComponent', () => {
       passwordInput.dispatchEvent(new Event('input'));
       fixture.detectChanges();
       component.submit();
+
+      const registerRequest = httpMock.expectOne({url: 'api/auth/register', method: "POST"});
+      registerRequest.flush(null);
 
       expect(authSpy).toHaveBeenCalledWith({
         email: 'test@test.com',
@@ -90,8 +98,10 @@ describe('RegisterComponent', () => {
   it("should not register", () => {
     fixture.ngZone?.run(() => {
       const navigateSpy = jest.spyOn(router, 'navigate');
-      const authSpy = jest.spyOn(authService, 'register').mockReturnValueOnce(throwError(() => {}));
+      const authSpy = jest.spyOn(authService, 'register').mockReturnValueOnce(throwError(() => {
+      }));
       component.submit();
+
       expect(component.form.value).toStrictEqual({
         email: '',
         firstName: '',
