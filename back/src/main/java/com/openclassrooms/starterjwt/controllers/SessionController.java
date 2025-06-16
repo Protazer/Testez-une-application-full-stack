@@ -101,7 +101,6 @@ public class SessionController {
     public ResponseEntity<?> noLongerParticipate(@PathVariable("id") String id, @PathVariable("userId") String userId) {
         try {
             this.sessionService.noLongerParticipate(Long.parseLong(id), Long.parseLong(userId));
-
             return ResponseEntity.ok().build();
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().build();
