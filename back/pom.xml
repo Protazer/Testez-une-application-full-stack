@@ -109,7 +109,11 @@
                 <version>0.8.5</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/dto/*</exclude>
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/payload/**</exclude>
+                        <exclude>**/models/**</exclude>
+                        <exclude>**/mapper/**</exclude>
+                        <exclude>**/exception/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -154,8 +158,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>10</source>
+                    <target>10</target>
                 </configuration>
             </plugin>
         </plugins>
