@@ -1,5 +1,6 @@
 package com.openclassrooms.starterjwt.integration.controllers;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,12 +15,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "yoga@studio.com", roles = {"ADMIN"})
+@DisplayName("TeacherController integration tests")
 class TeacherControllerIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
+	@DisplayName("it should test to find a teach by his id")
 	void shouldFindTeacherById() throws Exception {
 		mockMvc.perform(get("/api/teacher/1"))
 				.andExpect(status().isOk())
@@ -27,6 +30,7 @@ class TeacherControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test to find all teachers")
 	void shouldFindAllTeachers() throws Exception {
 		mockMvc.perform(get("/api/teacher"))
 				.andExpect(status().isOk())

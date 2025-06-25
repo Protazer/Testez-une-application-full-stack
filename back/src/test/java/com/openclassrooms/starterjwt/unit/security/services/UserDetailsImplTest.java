@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.unit.security.services;
 
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -10,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("UserDetailsImpl unit tests")
 class UserDetailsImplTest {
 
 	private UserDetailsImpl userDetails;
@@ -28,6 +30,7 @@ class UserDetailsImplTest {
 
 
 	@Test
+	@DisplayName("it should test object builder")
 	void shouldTestTheBuilder() {
 		UserDetailsImpl buildUser = UserDetailsImpl.builder()
 				.id(2L)
@@ -48,6 +51,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance authorities")
 	void getAuthorities() {
 		//Assert
 		assertNotNull(userDetails.getAuthorities());
@@ -55,36 +59,42 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance isAccountNonExpired status")
 	void isAccountNonExpired() {
 		//Assert
 		assertTrue(userDetails.isAccountNonExpired());
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance isAccountNonLocked status")
 	void isAccountNonLocked() {
 		//Assert
 		assertTrue(userDetails.isAccountNonLocked());
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance isEnabled isCredentialsNonExpired status")
 	void isCredentialsNonExpired() {
 		//Assert
 		assertTrue(userDetails.isCredentialsNonExpired());
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance isEnabled status")
 	void isEnabled() {
 		//Assert
 		assertTrue(userDetails.isEnabled());
 	}
 
 	@Test
+	@DisplayName("it should test if object passed is equal to current instance")
 	void testEquals() {
 		//Assert
 		assertThat(userDetails.equals(userDetails)).isTrue();
 	}
 
 	@Test
+	@DisplayName("it should test if different object passed is equal to current instance")
 	void testEqualsWithDifferentObject() {
 		//Arrange
 		UserDetailsImpl mockedDifferentUser = UserDetailsImpl.builder()
@@ -101,6 +111,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test if empty object passed is equal to current instance")
 	void testEqualsWithNoDetailsObject() {
 		//Arrange
 		Object nonUserDetailsObject = new Object();
@@ -110,6 +121,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test if null  passed parameter is equal to current instance")
 	void testEqualsWithNull() {
 		//Assert
 		assertThat(userDetails.equals(null)).isFalse();
@@ -117,6 +129,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance id")
 	void getId() {
 		//Assert
 		assertNotNull(userDetails.getId());
@@ -124,6 +137,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance user name")
 	void getUsername() {
 		//Assert
 		assertNotNull(userDetails.getUsername());
@@ -131,6 +145,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance first name")
 	void getFirstName() {
 		//Assert
 		assertNotNull(userDetails.getFirstName());
@@ -138,6 +153,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance last name")
 	void getLastName() {
 		//Assert
 		assertNotNull(userDetails.getLastName());
@@ -145,6 +161,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance admin status")
 	void getAdmin() {
 		//Assert
 		assertNotNull(userDetails.getAdmin());
@@ -152,6 +169,7 @@ class UserDetailsImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get current instance password")
 	void getPassword() {
 		//Assert
 		assertNotNull(userDetails.getPassword());

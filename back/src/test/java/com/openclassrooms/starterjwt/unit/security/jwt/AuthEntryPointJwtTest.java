@@ -2,6 +2,7 @@ package com.openclassrooms.starterjwt.unit.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.security.jwt.AuthEntryPointJwt;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("AuthEntryPointJwt unit tests")
 class AuthEntryPointJwtTest {
 
 	@Mock
@@ -35,6 +37,7 @@ class AuthEntryPointJwtTest {
 	AuthenticationException authException;
 
 	@Test
+	@DisplayName("it should test the security commence method")
 	void shouldCommence() throws IOException, ServletException {
 		// Arrange
 		AuthEntryPointJwt entryPoint = new AuthEntryPointJwt();

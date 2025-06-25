@@ -3,6 +3,7 @@ package com.openclassrooms.starterjwt.integration.controllers;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "test@studio.com", roles = {"ADMIN"})
+@DisplayName("UserController integration tests")
 class UserControllerIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
@@ -41,12 +43,14 @@ class UserControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test ti find a user by his id")
 	void shouldFindUserById() throws Exception {
 		mockMvc.perform(get("/api/user/" + userId)).andExpect(status().isOk())
 				.andExpect(jsonPath("$.email").value("test@studio.com"));
 	}
 
 	@Test
+	@DisplayName("it should test to delete a user")
 	void shouldSaveUser() throws Exception {
 		mockMvc.perform(delete("/api/user/" + userId))
 				.andExpect(status().isOk());

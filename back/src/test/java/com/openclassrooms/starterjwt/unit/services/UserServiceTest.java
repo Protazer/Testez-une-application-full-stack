@@ -4,6 +4,7 @@ import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,41 +18,44 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("UserService unit tests")
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
+	@Mock
+	private UserRepository userRepository;
 
-    @InjectMocks
-    private UserService userService;
+	@InjectMocks
+	private UserService userService;
 
-    private User mockedUser;
+	private User mockedUser;
 
-    @BeforeEach
-    public void setup() {
-        mockedUser = new User()
-                .setId(1L)
-                .setEmail("test@test.com")
-                .setFirstName("userFirstName")
-                .setLastName("userLastName")
-                .setAdmin(false);
-    }
+	@BeforeEach
+	public void setup() {
+		mockedUser = new User()
+				.setId(1L)
+				.setEmail("test@test.com")
+				.setFirstName("userFirstName")
+				.setLastName("userLastName")
+				.setAdmin(false);
+	}
 
-    @Test
-    void shouldDeleteUser() {
-        //Act
-        userService.delete(1L);
-        //Assert
-        verify(userRepository).deleteById(1L);
-    }
+	@Test
+	@DisplayName("it should test to delete a user")
+	void shouldDeleteUser() {
+		//Act
+		userService.delete(1L);
+		//Assert
+		verify(userRepository).deleteById(1L);
+	}
 
-    @Test
-    void shouldFindUserById() {
-        //Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(mockedUser));
-        //Act
-        User findedUser = userService.findById(1L);
-        //Assert
-        assertThat(findedUser).isEqualTo(mockedUser);
-    }
+	@Test
+	@DisplayName("it should test to find a user by his id")
+	void shouldFindUserById() {
+		//Arrange
+		when(userRepository.findById(1L)).thenReturn(Optional.of(mockedUser));
+		//Act
+		User findedUser = userService.findById(1L);
+		//Assert
+		assertThat(findedUser).isEqualTo(mockedUser);
+	}
 }

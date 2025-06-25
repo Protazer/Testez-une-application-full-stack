@@ -3,6 +3,7 @@ package com.openclassrooms.starterjwt.unit.security.services;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.security.services.UserDetailsServiceImpl;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("UserDetailsServiceImpl unit tests")
 class UserDetailsServiceImplTest {
 	@Mock
 	private UserRepository userRepository;
@@ -25,6 +27,7 @@ class UserDetailsServiceImplTest {
 	private UserDetailsServiceImpl userDetailsService;
 
 	@Test
+	@DisplayName("it should test to load user by his userName")
 	void shouldLoadUserByUsername() {
 		//Arrange
 		User mockedUser = new User()
@@ -46,6 +49,7 @@ class UserDetailsServiceImplTest {
 	}
 
 	@Test
+	@DisplayName("it should test if user is loaded with bad userName")
 	void shouldNotLoadUserByUsername() {
 		//Arrange
 		when(userRepository.findByEmail("test@studio.com")).thenReturn(Optional.empty());

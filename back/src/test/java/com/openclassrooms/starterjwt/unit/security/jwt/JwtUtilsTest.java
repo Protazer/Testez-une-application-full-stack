@@ -5,6 +5,7 @@ import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("JwtUtils unit tests")
 class JwtUtilsTest {
 
 	@InjectMocks
@@ -44,6 +46,7 @@ class JwtUtilsTest {
 	}
 
 	@Test
+	@DisplayName("it should test to generate a valid token")
 	void generateJwtToken() {
 		//Arrange
 		when(authentication.getPrincipal()).thenReturn(userDetails);
@@ -54,6 +57,7 @@ class JwtUtilsTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get username from token")
 	void shouldGetUserNameFromJwtToken() {
 		//Arrange
 		when(authentication.getPrincipal()).thenReturn(userDetails);
@@ -65,6 +69,7 @@ class JwtUtilsTest {
 	}
 
 	@Test
+	@DisplayName("it should test to validate token")
 	void shouldValidateJwtToken() {
 		when(authentication.getPrincipal()).thenReturn(userDetails);
 
@@ -74,17 +79,20 @@ class JwtUtilsTest {
 	}
 
 	@Test
+	@DisplayName("it should test the response when invalid token is passed")
 	void shouldReturnInvalidToken() {
 		String invalidToken = "invalid token";
 		assertFalse(jwtUtils.validateJwtToken(invalidToken));
 	}
 
 	@Test
+	@DisplayName("it should test the response when empty token is passed")
 	void shouldReturnInvalidTokenWithEmptyValue() {
 		assertFalse(jwtUtils.validateJwtToken(""));
 	}
 
 	@Test
+	@DisplayName("it should test the response when invalid token signature is passed")
 	void shouldReturnInvalidSignatureToken() {
 		String invalidSignatureToken = Jwts.builder()
 				.setSubject("test@studio.com")
@@ -97,6 +105,7 @@ class JwtUtilsTest {
 	}
 
 	@Test
+	@DisplayName("it should test the response when invalid token expiration date is passed")
 	void shouldReturnInvalidExpiredToken() {
 		String expiredToken = Jwts.builder()
 				.setSubject("test@studio.com")
@@ -109,6 +118,7 @@ class JwtUtilsTest {
 	}
 
 	@Test
+	@DisplayName("it should test the response when invalid token payload is passed")
 	void shouldReturnUnsupportedToken() {
 		String unsupportedToken = Jwts.builder()
 				.setPayload("bad payload")

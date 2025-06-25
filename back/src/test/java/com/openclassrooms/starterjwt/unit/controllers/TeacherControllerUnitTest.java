@@ -5,6 +5,7 @@ import com.openclassrooms.starterjwt.dto.TeacherDto;
 import com.openclassrooms.starterjwt.mapper.TeacherMapper;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.services.TeacherService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("TeacherController unit test")
 class TeacherControllerUnitTest {
 
 	@Mock
@@ -31,6 +33,7 @@ class TeacherControllerUnitTest {
 	private TeacherController teacherController;
 
 	@Test
+	@DisplayName("it should test to find a teacher by his id")
 	void shouldFindTeacherById() {
 		//Arrange
 		TeacherDto teacherDto = new TeacherDto();
@@ -45,6 +48,7 @@ class TeacherControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if teacher is not found")
 	void shouldReturnNotFoundWhenFindTeacherById() {
 		//Arrange
 		when(teacherService.findById(1L)).thenReturn(null);
@@ -55,6 +59,7 @@ class TeacherControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if id is bad during find teacher by id")
 	void shouldReturnBadRequestWhenFindTeacherById() {
 		//Act
 		ResponseEntity<?> response = teacherController.findById("abc");
@@ -63,6 +68,7 @@ class TeacherControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test to find all teachers")
 	void shouldFindAllTeachers() {
 		//Arrange
 		List<Teacher> teachers = Arrays.asList(new Teacher(), new Teacher());
