@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
 import com.openclassrooms.starterjwt.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("AuthController integration tests")
 class AuthControllerIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
@@ -29,6 +31,7 @@ class AuthControllerIntegrationTest {
 
 
 	@Test
+	@DisplayName("it should test user authentication")
 	void shouldAuthenticateUser() throws Exception {
 		LoginRequest login = new LoginRequest();
 		login.setEmail("yoga@studio.com");
@@ -41,6 +44,7 @@ class AuthControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test user registration")
 	void shouldRegisterUser() throws Exception {
 		SignupRequest signup = new SignupRequest();
 		signup.setEmail("test@test.com");

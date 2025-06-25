@@ -9,6 +9,7 @@ import com.openclassrooms.starterjwt.payload.response.MessageResponse;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("AuthController unit tests")
 class AuthControllerUnitTest {
 
 	@Mock
@@ -43,6 +45,7 @@ class AuthControllerUnitTest {
 	private AuthController authController;
 
 	@Test
+	@DisplayName("it should test to authenticate a user")
 	void shouldAuthenticateUser() {
 		//Arrange
 		LoginRequest loginRequest = new LoginRequest();
@@ -76,6 +79,7 @@ class AuthControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test to get isAdmin status from authenticated user and return false if user doesn't exist")
 	void shouldGetIsAdminFalseWhenAuthenticateUser() {
 		//Arrange
 		LoginRequest loginRequest = new LoginRequest();
@@ -103,6 +107,7 @@ class AuthControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test to register a new user")
 	void shouldRegisterUser() {
 		//Arrange
 		SignupRequest signupRequest = new SignupRequest();
@@ -125,6 +130,7 @@ class AuthControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if register fail")
 	void shouldReturnBadRequestWhenRegisterUser() {
 		//Arrange
 		SignupRequest signupRequest = new SignupRequest();

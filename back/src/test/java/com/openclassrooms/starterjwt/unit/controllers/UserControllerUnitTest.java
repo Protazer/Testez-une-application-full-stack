@@ -6,6 +6,7 @@ import com.openclassrooms.starterjwt.mapper.UserMapper;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import com.openclassrooms.starterjwt.services.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("UserController unit tests")
 class UserControllerUnitTest {
 	@InjectMocks
 	UserController userController;
@@ -31,6 +33,7 @@ class UserControllerUnitTest {
 	private UserService userService;
 
 	@Test
+	@DisplayName("it should test to find user by his id")
 	void shouldFindUserById() {
 		//Arrange
 		User user = new User().setId(1L);
@@ -45,6 +48,7 @@ class UserControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if user is not found")
 	void shouldReturnNotFoundWhenFindUserById() {
 		//Arrange
 		when(userService.findById(1L)).thenReturn(null);
@@ -55,6 +59,7 @@ class UserControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if id is bad during find user by id")
 	void shouldReturnBadRequestWhenFindUserById() {
 		//Act
 		ResponseEntity<?> response = userController.findById("abc");
@@ -63,6 +68,7 @@ class UserControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test to delete user")
 	void shouldSaveUser() {
 		//Arrange
 		User user = new User().setId(1L).setEmail("test@test.com");
@@ -78,6 +84,7 @@ class UserControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if unauthorized request")
 	void shouldReturnUnauthorizedWhenSaveUser() {
 		//Arrange
 		User user = new User().setId(1L).setEmail("test1@test.com");
@@ -92,6 +99,7 @@ class UserControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if user is found before delete")
 	void shouldReturnNotFoundWhenSaveUser() {
 		//Arrange
 		when(userService.findById(1L)).thenReturn(null);
@@ -102,6 +110,7 @@ class UserControllerUnitTest {
 	}
 
 	@Test
+	@DisplayName("it should test if id is bad during delete user")
 	void shouldReturnBadRequestWhenSaveUser() {
 		//Act
 		ResponseEntity<?> response = userController.save("abc");

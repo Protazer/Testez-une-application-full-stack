@@ -6,6 +6,7 @@ import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockUser(username = "yoga@studio.com", roles = {"ADMIN"})
+@DisplayName("SessionController integration tests")
 class SessionControllerIntegrationTest {
 	@Autowired
 	private MockMvc mockMvc;
@@ -48,6 +50,7 @@ class SessionControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test to find session by id")
 	void shouldFindSessionById() throws Exception {
 		System.out.println(sessionRepository.findAll());
 		mockMvc.perform(get("/api/session/" + sessionId)
@@ -57,12 +60,14 @@ class SessionControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test to find all sessions")
 	void shouldFindAllSessions() throws Exception {
 		mockMvc.perform(get("/api/session/").contentType(MediaType.APPLICATION_JSON)
 		).andExpect(status().isOk()).andExpect(jsonPath("$[0].name").value("Test Session"));
 	}
 
 	@Test
+	@DisplayName("it should test the session creation")
 	void shouldCreateSession() throws Exception {
 		SessionDto newSession = new SessionDto();
 		newSession.setName("created session name");
@@ -82,6 +87,7 @@ class SessionControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test the session update")
 	void shouldUpdateSession() throws Exception {
 		SessionDto updatedSession = new SessionDto();
 		updatedSession.setName("Session test updated");
@@ -101,6 +107,7 @@ class SessionControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test the delete session")
 	void shouldDeleteSession() throws Exception {
 		mockMvc.perform(delete("/api/session/" + sessionId)
 						.contentType(MediaType.APPLICATION_JSON))
@@ -110,6 +117,7 @@ class SessionControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test participate functionality")
 	void shouldParticipate() throws Exception {
 		mockMvc.perform(post("/api/session/" + sessionId + "/participate/1")
 						.contentType(MediaType.APPLICATION_JSON))
@@ -117,6 +125,7 @@ class SessionControllerIntegrationTest {
 	}
 
 	@Test
+	@DisplayName("it should test the no longer participate functionality")
 	void noLongerParticipate() throws Exception {
 		Session session = sessionRepository.findById(sessionId).orElse(null);
 		assertNotNull(session);

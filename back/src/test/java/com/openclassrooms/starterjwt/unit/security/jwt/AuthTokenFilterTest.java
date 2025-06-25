@@ -5,6 +5,7 @@ import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import com.openclassrooms.starterjwt.security.services.UserDetailsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("AuthTokenFilter unit tests")
 class AuthTokenFilterTest {
 
 	@Mock
@@ -46,6 +48,7 @@ class AuthTokenFilterTest {
 	}
 
 	@Test
+	@DisplayName("it should test authentication with valid token")
 	void shouldDoFilterInternal() throws ServletException, IOException {
 		//Arrange
 		String token = "testToken";
@@ -65,7 +68,8 @@ class AuthTokenFilterTest {
 	}
 
 	@Test
-	void doFilterInternalWithInvalidToken() throws ServletException, IOException {
+	@DisplayName("it should test authentication with invalid token format")
+	void doFilterInternalWithInvalidTokenFormat() throws ServletException, IOException {
 		String token = "testToken";
 		mockHttpServletRequest.addHeader("Authorization", "Bearer " + token);
 		when(jwtUtils.validateJwtToken(token)).thenReturn(false);
@@ -76,6 +80,7 @@ class AuthTokenFilterTest {
 	}
 
 	@Test
+	@DisplayName("it should test authentication with invalid token value")
 	void shouldDoFilterInternalWithInvalidJwt() throws ServletException, IOException {
 		mockHttpServletRequest.addHeader("Authorization", "abcd");
 		authTokenFilter.doFilterInternal(mockHttpServletRequest, mockHttpServletResponse, filterChain);
@@ -83,6 +88,7 @@ class AuthTokenFilterTest {
 	}
 
 	@Test
+	@DisplayName("should test the runtime exception if getUserName return an exception")
 	void shouldDoFilterInternalCatchException() throws ServletException, IOException {
 		String token = "testToken";
 
